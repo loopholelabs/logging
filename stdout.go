@@ -108,7 +108,7 @@ func (c *ConsoleLogger) Important(msg string) {
 // Importantf logs an Important level message in Blue
 func (c *ConsoleLogger) Importantf(msg string, args ...interface{}) {
 	if c.level <= ImportantLevel {
-		color.Primary.Printf(msg, args)
+		color.Primary.Printf(msg, args...)
 	}
 }
 

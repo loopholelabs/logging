@@ -35,7 +35,7 @@ func (z *ZerologAdapter) Fatal(msg string) {
 }
 
 func (z *ZerologAdapter) Fatalf(msg string, args ...interface{}) {
-	z.l.Fatal().Msgf(msg)
+	z.l.Fatal().Msgf(msg, args...)
 }
 
 func (z *ZerologAdapter) Error(msg string) {
@@ -43,7 +43,7 @@ func (z *ZerologAdapter) Error(msg string) {
 }
 
 func (z *ZerologAdapter) Errorf(msg string, args ...interface{}) {
-	z.l.Error().Msgf(msg, args)
+	z.l.Error().Msgf(msg, args...)
 }
 
 func (z *ZerologAdapter) Warn(msg string) {
@@ -51,7 +51,7 @@ func (z *ZerologAdapter) Warn(msg string) {
 }
 
 func (z *ZerologAdapter) Warnf(msg string, args ...interface{}) {
-	z.l.Warn().Msgf(msg, args)
+	z.l.Warn().Msgf(msg, args...)
 }
 
 func (z *ZerologAdapter) Info(msg string) {
@@ -59,7 +59,7 @@ func (z *ZerologAdapter) Info(msg string) {
 }
 
 func (z *ZerologAdapter) Infof(msg string, args ...interface{}) {
-	z.l.Info().Msgf(msg, args)
+	z.l.Info().Msgf(msg, args...)
 }
 
 func (z *ZerologAdapter) Debug(msg string) {
@@ -67,5 +67,5 @@ func (z *ZerologAdapter) Debug(msg string) {
 }
 
 func (z *ZerologAdapter) Debugf(msg string, args ...interface{}) {
-	z.l.Debug().Msgf(msg, args)
+	z.l.Debug().Msgf(msg, args...)
 }

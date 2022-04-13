@@ -58,98 +58,98 @@ func (c *ConsoleLogger) SetOutput(w io.Writer) {
 
 // Debug logs a Debug level message in Cyan
 func (c *ConsoleLogger) Debug(msg string) {
-	if c.level <= DebugLevel {
+	if c.level >= DebugLevel {
 		color.Debug.Print(msg)
 	}
 }
 
 // Debugf logs a Debug level message in Cyan
 func (c *ConsoleLogger) Debugf(msg string, args ...interface{}) {
-	if c.level <= DebugLevel {
+	if c.level >= DebugLevel {
 		color.Debug.Printf(msg, args...)
 	}
 }
 
 // Info logs an Info level message in Gray
 func (c *ConsoleLogger) Info(msg string) {
-	if c.level <= InfoLevel {
+	if c.level >= InfoLevel {
 		color.Notice.Print(msg)
 	}
 }
 
 // Infof logs an Info level message in Gray
 func (c *ConsoleLogger) Infof(msg string, args ...interface{}) {
-	if c.level <= InfoLevel {
+	if c.level >= InfoLevel {
 		color.Notice.Printf(msg, args...)
 	}
 }
 
 // Success logs a Success level message in Green
 func (c *ConsoleLogger) Success(msg string) {
-	if c.level <= SuccessLevel {
+	if c.level >= SuccessLevel {
 		color.Info.Print(msg)
 	}
 }
 
 // Successf logs a Success level message in Green
 func (c *ConsoleLogger) Successf(msg string, args ...interface{}) {
-	if c.level <= SuccessLevel {
+	if c.level >= SuccessLevel {
 		color.Info.Printf(msg, args...)
 	}
 }
 
 // Important logs an Important level message in Blue
 func (c *ConsoleLogger) Important(msg string) {
-	if c.level <= ImportantLevel {
+	if c.level >= ImportantLevel {
 		color.Primary.Print(msg)
 	}
 }
 
 // Importantf logs an Important level message in Blue
 func (c *ConsoleLogger) Importantf(msg string, args ...interface{}) {
-	if c.level <= ImportantLevel {
+	if c.level >= ImportantLevel {
 		color.Primary.Printf(msg, args...)
 	}
 }
 
 // Error logs an Error level message in Red
 func (c *ConsoleLogger) Error(msg string) {
-	if c.level <= ErrorLevel {
+	if c.level >= ErrorLevel {
 		color.Error.Printf(msg)
 	}
 }
 
 // Errorf logs an Error level message in Red
 func (c *ConsoleLogger) Errorf(msg string, args ...interface{}) {
-	if c.level <= ErrorLevel {
+	if c.level >= ErrorLevel {
 		color.Error.Printf(msg, args...)
 	}
 }
 
 // Warn logs a Warn level message Orange
 func (c *ConsoleLogger) Warn(msg string) {
-	if c.level <= WarnLevel {
+	if c.level >= WarnLevel {
 		color.Danger.Printf(msg)
 	}
 }
 
 // Warnf logs a Warn level message Orange
 func (c *ConsoleLogger) Warnf(msg string, args ...interface{}) {
-	if c.level <= WarnLevel {
+	if c.level >= WarnLevel {
 		color.Danger.Printf(msg, args...)
 	}
 }
 
 // Fatal logs a Fatal level message in White
 func (c *ConsoleLogger) Fatal(msg string) {
-	if c.level <= FatalLevel {
+	if c.level >= FatalLevel {
 		color.Light.Printf(msg)
 	}
 }
 
 // Fatalf logs a Fatal level message in White
 func (c *ConsoleLogger) Fatalf(msg string, args ...interface{}) {
-	if c.level <= FatalLevel {
+	if c.level >= FatalLevel {
 		color.Light.Printf(msg, args...)
 	}
 }

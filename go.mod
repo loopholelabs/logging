@@ -3,7 +3,7 @@ module github.com/loopholelabs/logging
 go 1.17
 
 require (
-	github.com/gookit/color v1.5.0
+	github.com/gookit/color v1.5.4
 	github.com/rs/zerolog v1.33.0
 )
 

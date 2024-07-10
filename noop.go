@@ -16,7 +16,7 @@
 
 package logging
 
-var _ Logger = (*NopLogger)(nil)
+var _ Logger = (*Noop)(nil)
 
 // Noop is a no-op logger
 type Noop struct {}

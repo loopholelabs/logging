@@ -42,8 +42,12 @@ type ConsoleLogger struct {
 }
 
 // NewConsoleLogger creates a new instance of the *ConsoleLogger with a default logging level of FatalLevel
-func NewConsoleLogger() *ConsoleLogger {
-	return new(ConsoleLogger)
+func NewConsoleLogger(w io.Writer) *ConsoleLogger {
+	c := &ConsoleLogger{
+		level: FatalLevel,
+	}
+	color.SetOutput(w)
+	return c
 }
 
 // SetLevel sets the logging level of the ConsoleLogger to level

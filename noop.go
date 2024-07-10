@@ -16,27 +16,32 @@
 
 package logging
 
-var _ Logger = (*Noop)(nil)
+var _ Logger = (*NoopLogger)(nil)
 
-// Noop is a no-op logger
-type Noop struct {}
+// NoopLogger is a no-op logger
+type NoopLogger struct{}
 
-func (n *Noop) Fatal(string) {}
+// NewNoopLogger creates a new instance of the *NoopLogger
+func NewNoopLogger() *NoopLogger {
+	return new(NoopLogger)
+}
 
-func (n *Noop) Fatalf(string, ...interface{}) {}
+func (n *NoopLogger) Fatal(string) {}
 
-func (n *Noop) Error(string) {}
+func (n *NoopLogger) Fatalf(string, ...interface{}) {}
 
-func (n *Noop) Errorf(string, ...interface{}) {}
+func (n *NoopLogger) Error(string) {}
 
-func (n *Noop) Warn(string) {}
+func (n *NoopLogger) Errorf(string, ...interface{}) {}
 
-func (n *Noop) Warnf(string, ...interface{}) {}
+func (n *NoopLogger) Warn(string) {}
 
-func (n *Noop) Info(msg string) {}
+func (n *NoopLogger) Warnf(string, ...interface{}) {}
 
-func (n *Noop) Infof(string, ...interface{}) {}
+func (n *NoopLogger) Info(string) {}
 
-func (n *Noop) Debug(string) {}
+func (n *NoopLogger) Infof(string, ...interface{}) {}
 
-func (n *Noop) Debugf(string, ...interface{}) {}
+func (n *NoopLogger) Debug(string) {}
+
+func (n *NoopLogger) Debugf(string, ...interface{}) {}

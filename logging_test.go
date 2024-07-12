@@ -87,16 +87,36 @@ func TestInfo(t *testing.T) {
 			assert.Equal(t, fillSlogTestFields(t, "level=INFO msg=\"\" source=%s foo=bar\n"), out.String())
 		})
 	})
-	//
-	//t.Run("two-field", func(t *testing.T) {
-	//	out := &bytes.Buffer{}
-	//	log := New(out)
-	//	log.Info().
-	//		Str("foo", "bar").
-	//		Int("n", 123).
-	//		Msg("")
-	//	if got, want := decodeIfBinaryToString(out.Bytes()), `{"level":"info","foo":"bar","n":123}`+"\n"; got != want {
-	//		t.Errorf("invalid log output:\ngot:  %v\nwant: %v", got, want)
-	//	}
-	//})
+
+	t.Run("two-field", func(t *testing.T) {
+		t.Run("noop", func(t *testing.T) {
+			out := &bytes.Buffer{}
+			log := New(Noop, t.Name(), out)
+			log.Info().
+				Str("foo", "bar").
+				Int("n", 123).
+				Msg("")
+			assert.Equal(t, "", out.String())
+		})
+
+		t.Run("zerolog", func(t *testing.T) {
+			out := &bytes.Buffer{}
+			log := New(Zerolog, t.Name(), out)
+			log.Info().
+				Str("foo", "bar").
+				Int("n", 123).
+				Msg("")
+			assert.Equal(t, fillZerologTestFields(t, "{\"level\":\"info\",\"time\":\"%s\",\"source\":\"%s\",\"foo\":\"bar\",\"n\":123}\n"), out.String())
+		})
+
+		t.Run("slog", func(t *testing.T) {
+			out := &bytes.Buffer{}
+			log := New(Slog, t.Name(), out)
+			log.Info().
+				Str("foo", "bar").
+				Int("n", 123).
+				Msg("")
+			assert.Equal(t, fillSlogTestFields(t, "level=INFO msg=\"\" source=%s foo=bar n=123\n"), out.String())
+		})
+	})
 }

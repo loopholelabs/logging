@@ -1,10 +1,11 @@
 # Logging
 
-Logging is a [Go](http://golang.org) library that holds a set of standardized utilities and interfaces for logging.
+Logging is a [Go](http://golang.org) library that holds a set of standardized utilities and interfaces 
+for logging within Loophole Labs projects.
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-brightgreen.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Discord](https://dcbadge.vercel.app/api/server/JYmFhtdPeu?style=flat)](https://loopholelabs.io/discord)
-![Go Version](https://img.shields.io/badge/go%20version-%3E=1.18-61CFDD.svg)
+![Go Version](https://img.shields.io/badge/go%20version-%3E=1.22-61CFDD.svg)
 [![Go Reference](https://pkg.go.dev/badge/github.com/loopholelabs/logging.svg)](https://pkg.go.dev/github.com/loopholelabs/logging)
 
 ## Contributing

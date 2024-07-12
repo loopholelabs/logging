@@ -20,6 +20,6 @@ func New(t testing.TB) *Testing {
 }
 
 func (t *Testing) Write(p []byte) (n int, err error) {
-	t.t.Log(string(p))
+	t.t.Logf(string(p))
 	return len(p), nil
 }

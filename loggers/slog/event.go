@@ -8,10 +8,10 @@ import (
 	"log/slog"
 	"net"
 
-	"github.com/loopholelabs/logging"
+	"github.com/loopholelabs/logging/types"
 )
 
-var _ logging.Event = (*Event)(nil)
+var _ types.Event = (*Event)(nil)
 
 var (
 	defaultContext = context.Background()
@@ -23,7 +23,7 @@ type Event struct {
 	attr   []slog.Attr
 }
 
-func (e *Event) Str(key string, val string) logging.Event {
+func (e *Event) Str(key string, val string) types.Event {
 	e.attr = append(e.attr, slog.Attr{
 		Key:   key,
 		Value: slog.StringValue(val),
@@ -31,7 +31,7 @@ func (e *Event) Str(key string, val string) logging.Event {
 	return e
 }
 
-func (e *Event) Bool(key string, val bool) logging.Event {
+func (e *Event) Bool(key string, val bool) types.Event {
 	e.attr = append(e.attr, slog.Attr{
 		Key:   key,
 		Value: slog.BoolValue(val),
@@ -39,7 +39,7 @@ func (e *Event) Bool(key string, val bool) logging.Event {
 	return e
 }
 
-func (e *Event) Int(key string, val int) logging.Event {
+func (e *Event) Int(key string, val int) types.Event {
 	e.attr = append(e.attr, slog.Attr{
 		Key:   key,
 		Value: slog.IntValue(val),
@@ -47,7 +47,7 @@ func (e *Event) Int(key string, val int) logging.Event {
 	return e
 }
 
-func (e *Event) Int8(key string, val int8) logging.Event {
+func (e *Event) Int8(key string, val int8) types.Event {
 	e.attr = append(e.attr, slog.Attr{
 		Key:   key,
 		Value: slog.IntValue(int(val)),
@@ -55,7 +55,7 @@ func (e *Event) Int8(key string, val int8) logging.Event {
 	return e
 }
 
-func (e *Event) Int16(key string, val int16) logging.Event {
+func (e *Event) Int16(key string, val int16) types.Event {
 	e.attr = append(e.attr, slog.Attr{
 		Key:   key,
 		Value: slog.IntValue(int(val)),
@@ -63,7 +63,7 @@ func (e *Event) Int16(key string, val int16) logging.Event {
 	return e
 }
 
-func (e *Event) Int32(key string, val int32) logging.Event {
+func (e *Event) Int32(key string, val int32) types.Event {
 	e.attr = append(e.attr, slog.Attr{
 		Key:   key,
 		Value: slog.IntValue(int(val)),
@@ -71,7 +71,7 @@ func (e *Event) Int32(key string, val int32) logging.Event {
 	return e
 }
 
-func (e *Event) Int64(key string, val int64) logging.Event {
+func (e *Event) Int64(key string, val int64) types.Event {
 	e.attr = append(e.attr, slog.Attr{
 		Key:   key,
 		Value: slog.Int64Value(val),
@@ -79,7 +79,7 @@ func (e *Event) Int64(key string, val int64) logging.Event {
 	return e
 }
 
-func (e *Event) Uint(key string, val uint) logging.Event {
+func (e *Event) Uint(key string, val uint) types.Event {
 	e.attr = append(e.attr, slog.Attr{
 		Key:   key,
 		Value: slog.Uint64Value(uint64(val)),
@@ -87,7 +87,7 @@ func (e *Event) Uint(key string, val uint) logging.Event {
 	return e
 }
 
-func (e *Event) Uint8(key string, val uint8) logging.Event {
+func (e *Event) Uint8(key string, val uint8) types.Event {
 	e.attr = append(e.attr, slog.Attr{
 		Key:   key,
 		Value: slog.Uint64Value(uint64(val)),
@@ -96,7 +96,7 @@ func (e *Event) Uint8(key string, val uint8) logging.Event {
 
 }
 
-func (e *Event) Uint16(key string, val uint16) logging.Event {
+func (e *Event) Uint16(key string, val uint16) types.Event {
 	e.attr = append(e.attr, slog.Attr{
 		Key:   key,
 		Value: slog.Uint64Value(uint64(val)),
@@ -104,7 +104,7 @@ func (e *Event) Uint16(key string, val uint16) logging.Event {
 	return e
 }
 
-func (e *Event) Uint32(key string, val uint32) logging.Event {
+func (e *Event) Uint32(key string, val uint32) types.Event {
 	e.attr = append(e.attr, slog.Attr{
 		Key:   key,
 		Value: slog.Uint64Value(uint64(val)),
@@ -112,7 +112,7 @@ func (e *Event) Uint32(key string, val uint32) logging.Event {
 	return e
 }
 
-func (e *Event) Uint64(key string, val uint64) logging.Event {
+func (e *Event) Uint64(key string, val uint64) types.Event {
 	e.attr = append(e.attr, slog.Attr{
 		Key:   key,
 		Value: slog.Uint64Value(val),
@@ -120,7 +120,7 @@ func (e *Event) Uint64(key string, val uint64) logging.Event {
 	return e
 }
 
-func (e *Event) Float32(key string, val float32) logging.Event {
+func (e *Event) Float32(key string, val float32) types.Event {
 	e.attr = append(e.attr, slog.Attr{
 		Key:   key,
 		Value: slog.Float64Value(float64(val)),
@@ -128,7 +128,7 @@ func (e *Event) Float32(key string, val float32) logging.Event {
 	return e
 }
 
-func (e *Event) Float64(key string, val float64) logging.Event {
+func (e *Event) Float64(key string, val float64) types.Event {
 	e.attr = append(e.attr, slog.Attr{
 		Key:   key,
 		Value: slog.Float64Value(val),
@@ -136,7 +136,7 @@ func (e *Event) Float64(key string, val float64) logging.Event {
 	return e
 }
 
-func (e *Event) IPAddr(key string, ipAddr net.IP) logging.Event {
+func (e *Event) IPAddr(key string, ipAddr net.IP) types.Event {
 	e.attr = append(e.attr, slog.Attr{
 		Key:   key,
 		Value: slog.StringValue(ipAddr.String()),
@@ -144,7 +144,7 @@ func (e *Event) IPAddr(key string, ipAddr net.IP) logging.Event {
 	return e
 }
 
-func (e *Event) MACAddr(key string, macAddr net.HardwareAddr) logging.Event {
+func (e *Event) MACAddr(key string, macAddr net.HardwareAddr) types.Event {
 	e.attr = append(e.attr, slog.Attr{
 		Key:   key,
 		Value: slog.StringValue(macAddr.String()),
@@ -152,9 +152,9 @@ func (e *Event) MACAddr(key string, macAddr net.HardwareAddr) logging.Event {
 	return e
 }
 
-func (e *Event) Err(err error) logging.Event {
+func (e *Event) Err(err error) types.Event {
 	e.attr = append(e.attr, slog.Attr{
-		Key:   logging.ErrorKey,
+		Key:   types.ErrorKey,
 		Value: slog.StringValue(err.Error()),
 	})
 	return e

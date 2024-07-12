@@ -8,10 +8,10 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"github.com/loopholelabs/logging"
+	"github.com/loopholelabs/logging/types"
 )
 
-var _ logging.Logger = (*Logger)(nil)
+var _ types.Logger = (*Logger)(nil)
 
 type Logger struct {
 	logger zerolog.Logger
@@ -19,11 +19,11 @@ type Logger struct {
 }
 
 func init() {
-	zerolog.TimestampFieldName = logging.TimestampKey
-	zerolog.ErrorFieldName = logging.ErrorKey
+	zerolog.TimestampFieldName = types.TimestampKey
+	zerolog.ErrorFieldName = types.ErrorKey
 }
 
-func New(source string, level logging.Level, output io.Writer) *Logger {
+func New(source string, level types.Level, output io.Writer) *Logger {
 	zl := zerolog.New(output)
 	z := &Logger{
 		logger: zl,
@@ -33,52 +33,52 @@ func New(source string, level logging.Level, output io.Writer) *Logger {
 	return z
 }
 
-func (z *Logger) SetLevel(level logging.Level) {
+func (z *Logger) SetLevel(level types.Level) {
 	var zerologLevel zerolog.Level
 	switch level {
-	case logging.FatalLevel:
+	case types.FatalLevel:
 		zerologLevel = zerolog.FatalLevel
-	case logging.ErrorLevel:
+	case types.ErrorLevel:
 		zerologLevel = zerolog.ErrorLevel
-	case logging.WarnLevel:
+	case types.WarnLevel:
 		zerologLevel = zerolog.WarnLevel
-	case logging.InfoLevel:
+	case types.InfoLevel:
 		zerologLevel = zerolog.InfoLevel
-	case logging.DebugLevel:
+	case types.DebugLevel:
 		zerologLevel = zerolog.DebugLevel
-	case logging.TraceLevel:
+	case types.TraceLevel:
 		zerologLevel = zerolog.TraceLevel
 	}
 	z.logger.Level(zerologLevel)
 }
 
-func (z *Logger) SubLogger(source string) logging.Logger {
+func (z *Logger) SubLogger(source string) types.Logger {
 	return &Logger{
 		logger: z.logger,
 		source: fmt.Sprintf("%s:%s", z.source, source),
 	}
 }
 
-func (z *Logger) Fatal() logging.Event {
-	return (*Event)(z.logger.Fatal().Timestamp().Str(logging.SourceKey, z.source))
+func (z *Logger) Fatal() types.Event {
+	return (*Event)(z.logger.Fatal().Timestamp().Str(types.SourceKey, z.source))
 }
 
-func (z *Logger) Error() logging.Event {
-	return (*Event)(z.logger.Error().Timestamp().Str(logging.SourceKey, z.source))
+func (z *Logger) Error() types.Event {
+	return (*Event)(z.logger.Error().Timestamp().Str(types.SourceKey, z.source))
 }
 
-func (z *Logger) Warn() logging.Event {
-	return (*Event)(z.logger.Warn().Timestamp().Str(logging.SourceKey, z.source))
+func (z *Logger) Warn() types.Event {
+	return (*Event)(z.logger.Warn().Timestamp().Str(types.SourceKey, z.source))
 }
 
-func (z *Logger) Info() logging.Event {
-	return (*Event)(z.logger.Info().Timestamp().Str(logging.SourceKey, z.source))
+func (z *Logger) Info() types.Event {
+	return (*Event)(z.logger.Info().Timestamp().Str(types.SourceKey, z.source))
 }
 
-func (z *Logger) Debug() logging.Event {
-	return (*Event)(z.logger.Debug().Timestamp().Str(logging.SourceKey, z.source))
+func (z *Logger) Debug() types.Event {
+	return (*Event)(z.logger.Debug().Timestamp().Str(types.SourceKey, z.source))
 }
 
-func (z *Logger) Trace() logging.Event {
-	return (*Event)(z.logger.Trace().Timestamp().Str(logging.SourceKey, z.source))
+func (z *Logger) Trace() types.Event {
+	return (*Event)(z.logger.Trace().Timestamp().Str(types.SourceKey, z.source))
 }

@@ -2,9 +2,9 @@
 
 package noop
 
-import "github.com/loopholelabs/logging"
+import "github.com/loopholelabs/logging/types"
 
-var _ logging.Logger = (*Logger)(nil)
+var _ types.Logger = (*Logger)(nil)
 
 type Logger struct{}
 
@@ -12,30 +12,30 @@ func New() *Logger {
 	return new(Logger)
 }
 
-func (s *Logger) SetLevel(logging.Level) {}
+func (s *Logger) SetLevel(types.Level) {}
 
-func (s *Logger) SubLogger(string) logging.Logger { return s }
+func (s *Logger) SubLogger(string) types.Logger { return s }
 
-func (s *Logger) Fatal() logging.Event {
+func (s *Logger) Fatal() types.Event {
 	return new(Event)
 }
 
-func (s *Logger) Error() logging.Event {
+func (s *Logger) Error() types.Event {
 	return new(Event)
 }
 
-func (s *Logger) Warn() logging.Event {
+func (s *Logger) Warn() types.Event {
 	return new(Event)
 }
 
-func (s *Logger) Info() logging.Event {
+func (s *Logger) Info() types.Event {
 	return new(Event)
 }
 
-func (s *Logger) Debug() logging.Event {
+func (s *Logger) Debug() types.Event {
 	return new(Event)
 }
 
-func (s *Logger) Trace() logging.Event {
+func (s *Logger) Trace() types.Event {
 	return new(Event)
 }

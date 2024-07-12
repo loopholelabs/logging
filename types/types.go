@@ -1,8 +1,37 @@
 // SPDX-License-Identifier: Apache-2.0
 
-package logging
+package types
 
 import "net"
+
+type Level int
+
+const (
+	FatalLevel Level = iota
+	ErrorLevel
+	WarnLevel
+	InfoLevel
+	DebugLevel
+	TraceLevel
+)
+
+const (
+	TimestampKey = "time"
+	ErrorKey     = "error"
+	SourceKey    = "source"
+)
+
+type Logger interface {
+	SetLevel(level Level)
+	SubLogger(source string) Logger
+
+	Fatal() Event
+	Error() Event
+	Warn() Event
+	Info() Event
+	Debug() Event
+	Trace() Event
+}
 
 type Event interface {
 	Str(key string, val string) Event

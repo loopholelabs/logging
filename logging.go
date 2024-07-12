@@ -6,10 +6,13 @@ import (
 	"io"
 	"testing"
 
-	testingAdapter "github.com/loopholelabs/logging/adapters/testing"
 	"github.com/loopholelabs/logging/loggers/noop"
 	"github.com/loopholelabs/logging/loggers/slog"
 	"github.com/loopholelabs/logging/loggers/zerolog"
+
+	"github.com/loopholelabs/logging/types"
+
+	testingAdapter "github.com/loopholelabs/logging/adapters/testing"
 )
 
 type Kind int
@@ -20,45 +23,16 @@ const (
 	Slog
 )
 
-type Level int
-
-const (
-	FatalLevel Level = iota
-	ErrorLevel
-	WarnLevel
-	InfoLevel
-	DebugLevel
-	TraceLevel
-)
-
-const (
-	TimestampKey = "time"
-	ErrorKey     = "error"
-	SourceKey    = "source"
-)
-
-type Logger interface {
-	SetLevel(level Level)
-	SubLogger(source string) Logger
-
-	Fatal() Event
-	Error() Event
-	Warn() Event
-	Info() Event
-	Debug() Event
-	Trace() Event
-}
-
 // New creates a new logger based on the given kind, source, and output
 // and a default level of Info.
-func New(kind Kind, source string, output io.Writer) Logger {
+func New(kind Kind, source string, output io.Writer) types.Logger {
 	switch kind {
 	case Noop:
 		return noop.New()
 	case Zerolog:
-		return zerolog.New(source, InfoLevel, output)
+		return zerolog.New(source, types.InfoLevel, output)
 	case Slog:
-		return slog.New(source, InfoLevel, output)
+		return slog.New(source, types.InfoLevel, output)
 	default:
 		return nil
 	}
@@ -69,8 +43,8 @@ func NewTest(t testing.TB, kind Kind, source string) {
 	case Noop:
 		noop.New()
 	case Zerolog:
-		zerolog.New(source, InfoLevel, testingAdapter.New(t))
+		zerolog.New(source, types.InfoLevel, testingAdapter.New(t))
 	case Slog:
-		slog.New(source, InfoLevel, testingAdapter.New(t))
+		slog.New(source, types.InfoLevel, testingAdapter.New(t))
 	}
 }

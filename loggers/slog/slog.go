@@ -7,18 +7,20 @@ import (
 	"io"
 	"log/slog"
 
-	"github.com/loopholelabs/logging"
+	"github.com/loopholelabs/logging/types"
 )
 
-var _ logging.Logger = (*Logger)(nil)
+var _ types.Logger = (*Logger)(nil)
 
-func replaceAttr(_ []string, a slog.Attr) slog.Attr {
-	switch a.Key {
-	case slog.TimeKey:
-		a.Key = logging.TimestampKey
+var (
+	ReplaceAttr = func(_ []string, a slog.Attr) slog.Attr {
+		switch a.Key {
+		case slog.TimeKey:
+			a.Key = types.TimestampKey
+		}
+		return a
 	}
-	return a
-}
+)
 
 type Logger struct {
 	logger *slog.Logger
@@ -27,7 +29,7 @@ type Logger struct {
 	source string
 }
 
-func New(source string, level logging.Level, output io.Writer) *Logger {
+func New(source string, level types.Level, output io.Writer) *Logger {
 	slogLevel := new(slog.LevelVar)
 	s := newSlog(source, slogLevel, output)
 	s.SetLevel(level)
@@ -37,9 +39,9 @@ func New(source string, level logging.Level, output io.Writer) *Logger {
 func newSlog(source string, slogLevel *slog.LevelVar, output io.Writer) *Logger {
 	sl := slog.New(slog.NewTextHandler(output, &slog.HandlerOptions{
 		Level:       slogLevel,
-		ReplaceAttr: replaceAttr,
+		ReplaceAttr: ReplaceAttr,
 	}).WithAttrs([]slog.Attr{
-		{Key: logging.SourceKey, Value: slog.StringValue(source)},
+		{Key: types.SourceKey, Value: slog.StringValue(source)},
 	}))
 	s := &Logger{
 		logger: sl,
@@ -50,67 +52,67 @@ func newSlog(source string, slogLevel *slog.LevelVar, output io.Writer) *Logger 
 	return s
 }
 
-func (s *Logger) SetLevel(level logging.Level) {
+func (s *Logger) SetLevel(level types.Level) {
 	var slogLevel slog.Level
 	switch level {
-	case logging.FatalLevel:
+	case types.FatalLevel:
 		slogLevel = slog.LevelError + 1
-	case logging.ErrorLevel:
+	case types.ErrorLevel:
 		slogLevel = slog.LevelError
-	case logging.WarnLevel:
+	case types.WarnLevel:
 		slogLevel = slog.LevelWarn
-	case logging.InfoLevel:
+	case types.InfoLevel:
 		slogLevel = slog.LevelInfo
-	case logging.DebugLevel:
+	case types.DebugLevel:
 		slogLevel = slog.LevelDebug
-	case logging.TraceLevel:
+	case types.TraceLevel:
 		slogLevel = slog.LevelDebug - 1
 	}
 	s.level.Set(slogLevel)
 }
 
-func (s *Logger) SubLogger(source string) logging.Logger {
+func (s *Logger) SubLogger(source string) types.Logger {
 	sloglevel := new(slog.LevelVar)
 	sloglevel.Set(s.level.Level())
 	return newSlog(fmt.Sprintf("%s:%s", s.source, source), sloglevel, s.output)
 }
 
-func (s *Logger) Fatal() logging.Event {
+func (s *Logger) Fatal() types.Event {
 	return &Event{
 		level:  slog.LevelError + 1,
 		logger: s.logger,
 	}
 }
 
-func (s *Logger) Error() logging.Event {
+func (s *Logger) Error() types.Event {
 	return &Event{
 		level:  slog.LevelError,
 		logger: s.logger,
 	}
 }
 
-func (s *Logger) Warn() logging.Event {
+func (s *Logger) Warn() types.Event {
 	return &Event{
 		level:  slog.LevelWarn,
 		logger: s.logger,
 	}
 }
 
-func (s *Logger) Info() logging.Event {
+func (s *Logger) Info() types.Event {
 	return &Event{
 		level:  slog.LevelInfo,
 		logger: s.logger,
 	}
 }
 
-func (s *Logger) Debug() logging.Event {
+func (s *Logger) Debug() types.Event {
 	return &Event{
 		level:  slog.LevelDebug,
 		logger: s.logger,
 	}
 }
 
-func (s *Logger) Trace() logging.Event {
+func (s *Logger) Trace() types.Event {
 	return &Event{
 		level:  slog.LevelDebug - 1,
 		logger: s.logger,

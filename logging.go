@@ -38,13 +38,15 @@ func New(kind Kind, source string, output io.Writer) types.Logger {
 	}
 }
 
-func NewTest(t testing.TB, kind Kind, source string) {
+func NewTest(t testing.TB, kind Kind, source string) types.Logger {
 	switch kind {
 	case Noop:
-		noop.New()
+		return noop.New()
 	case Zerolog:
-		zerolog.New(source, types.InfoLevel, testingAdapter.New(t))
+		return zerolog.New(source, types.InfoLevel, testingAdapter.New(t))
 	case Slog:
-		slog.New(source, types.InfoLevel, testingAdapter.New(t))
+		return slog.New(source, types.InfoLevel, testingAdapter.New(t))
+	default:
+		return nil
 	}
 }

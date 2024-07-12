@@ -59,7 +59,7 @@ func TestInfo(t *testing.T) {
 
 		t.Run("slog", func(t *testing.T) {
 			out := &bytes.Buffer{}
-			log := New(Slog, "test", out)
+			log := New(Slog, t.Name(), out)
 			log.Info().Msg("")
 			assert.Equal(t, fillSlogTestFields(t, "level=INFO msg=\"\" source=%s\n"), out.String())
 		})

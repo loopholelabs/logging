@@ -6,15 +6,23 @@ import "github.com/loopholelabs/logging/types"
 
 var _ types.Logger = (*Logger)(nil)
 
-type Logger struct{}
-
-func New() *Logger {
-	return new(Logger)
+type Logger struct {
+	level types.Level
 }
 
-func (s *Logger) SetLevel(types.Level) {}
+func New(level types.Level) *Logger {
+	return &Logger{level: level}
+}
 
-func (s *Logger) SubLogger(string) types.Logger { return s }
+func (s *Logger) SetLevel(level types.Level) {
+	s.level = level
+}
+
+func (s *Logger) Level() types.Level {
+	return s.level
+}
+
+func (s *Logger) SubLogger(string) types.SubLogger { return s }
 
 func (s *Logger) Fatal() types.Event {
 	return new(Event)

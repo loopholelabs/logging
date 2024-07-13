@@ -28,7 +28,7 @@ const (
 func New(kind Kind, source string, output io.Writer) types.Logger {
 	switch kind {
 	case Noop:
-		return noop.New()
+		return noop.New(types.InfoLevel)
 	case Zerolog:
 		return zerolog.New(source, types.InfoLevel, output)
 	case Slog:
@@ -38,10 +38,10 @@ func New(kind Kind, source string, output io.Writer) types.Logger {
 	}
 }
 
-func NewTest(t testing.TB, kind Kind, source string) types.Logger {
+func Test(t testing.TB, kind Kind, source string) types.Logger {
 	switch kind {
 	case Noop:
-		return noop.New()
+		return noop.New(types.InfoLevel)
 	case Zerolog:
 		return zerolog.New(source, types.InfoLevel, testingAdapter.New(t))
 	case Slog:

@@ -23,10 +23,11 @@ var (
 )
 
 type Logger struct {
-	logger *slog.Logger
-	level  *slog.LevelVar
-	output io.Writer
-	source string
+	logger    *slog.Logger
+	level     types.Level
+	slogLevel *slog.LevelVar
+	output    io.Writer
+	source    string
 }
 
 func New(source string, level types.Level, output io.Writer) *Logger {
@@ -44,12 +45,16 @@ func newSlog(source string, slogLevel *slog.LevelVar, output io.Writer) *Logger 
 		{Key: types.SourceKey, Value: slog.StringValue(source)},
 	}))
 	s := &Logger{
-		logger: sl,
-		output: output,
-		level:  slogLevel,
-		source: source,
+		logger:    sl,
+		output:    output,
+		slogLevel: slogLevel,
+		source:    source,
 	}
 	return s
+}
+
+func (s *Logger) Level() types.Level {
+	return s.level
 }
 
 func (s *Logger) SetLevel(level types.Level) {
@@ -68,12 +73,13 @@ func (s *Logger) SetLevel(level types.Level) {
 	case types.TraceLevel:
 		slogLevel = slog.LevelDebug - 1
 	}
-	s.level.Set(slogLevel)
+	s.level = level
+	s.slogLevel.Set(slogLevel)
 }
 
-func (s *Logger) SubLogger(source string) types.Logger {
+func (s *Logger) SubLogger(source string) types.SubLogger {
 	sloglevel := new(slog.LevelVar)
-	sloglevel.Set(s.level.Level())
+	sloglevel.Set(s.slogLevel.Level())
 	return newSlog(fmt.Sprintf("%s:%s", s.source, source), sloglevel, s.output)
 }
 

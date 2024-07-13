@@ -14,6 +14,7 @@ import (
 var _ types.Logger = (*Logger)(nil)
 
 type Logger struct {
+	level  types.Level
 	logger zerolog.Logger
 	source string
 }
@@ -33,6 +34,10 @@ func New(source string, level types.Level, output io.Writer) *Logger {
 	return z
 }
 
+func (z *Logger) Level() types.Level {
+	return z.level
+}
+
 func (z *Logger) SetLevel(level types.Level) {
 	var zerologLevel zerolog.Level
 	switch level {
@@ -49,10 +54,11 @@ func (z *Logger) SetLevel(level types.Level) {
 	case types.TraceLevel:
 		zerologLevel = zerolog.TraceLevel
 	}
+	z.level = level
 	z.logger.Level(zerologLevel)
 }
 
-func (z *Logger) SubLogger(source string) types.Logger {
+func (z *Logger) SubLogger(source string) types.SubLogger {
 	return &Logger{
 		logger: z.logger,
 		source: fmt.Sprintf("%s:%s", z.source, source),

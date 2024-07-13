@@ -23,7 +23,12 @@ const (
 
 type Logger interface {
 	SetLevel(level Level)
-	SubLogger(source string) Logger
+	SubLogger
+}
+
+type SubLogger interface {
+	Level() Level
+	SubLogger(source string) SubLogger
 
 	Fatal() Event
 	Error() Event

@@ -24,6 +24,10 @@ func (s *Logger) Level() types.Level {
 
 func (s *Logger) SubLogger(string) types.SubLogger { return s }
 
+func (s *Logger) With() types.Context {
+	return &Context{l: s}
+}
+
 func (s *Logger) Fatal() types.Event {
 	return new(Event)
 }

@@ -5,10 +5,11 @@ package logging
 import (
 	"bytes"
 	"fmt"
-	"github.com/rs/zerolog"
 	slogLogger "log/slog"
 	"testing"
 	"time"
+
+	"github.com/rs/zerolog"
 
 	"github.com/stretchr/testify/assert"
 
@@ -117,6 +118,84 @@ func TestInfo(t *testing.T) {
 				Int("n", 123).
 				Msg("")
 			assert.Equal(t, fillSlogTestFields(t, "level=INFO msg=\"\" source=%s foo=bar n=123\n"), out.String())
+		})
+	})
+
+	t.Run("with", func(t *testing.T) {
+		t.Run("noop", func(t *testing.T) {
+			out := &bytes.Buffer{}
+			log := New(Noop, t.Name(), out)
+			logger := log.With().
+				Str("foo", "bar").
+				Logger()
+			logger.Info().Msg("")
+			assert.Equal(t, "", out.String())
+		})
+
+		t.Run("zerolog", func(t *testing.T) {
+			out := &bytes.Buffer{}
+			log := New(Zerolog, t.Name(), out)
+
+			logger := log.With().
+				Str("foo", "bar").
+				Logger()
+			logger.Info().Msg("")
+			assert.Equal(t, fillZerologTestFields(t, "{\"level\":\"info\",\"foo\":\"bar\",\"time\":\"%s\",\"source\":\"%s\"}\n"), out.String())
+
+			// Log with per-message attribute.
+			out.Reset()
+			logger.Info().Int("n", 123).Msg("")
+			assert.Equal(t, fillZerologTestFields(t, "{\"level\":\"info\",\"foo\":\"bar\",\"time\":\"%s\",\"source\":\"%s\",\"n\":123}\n"), out.String())
+
+			// Retain attributes on sublogger.
+			out.Reset()
+			logger2 := logger.With().
+				Str("foo2", "bar2").
+				Logger()
+			logger2.Info().Msg("")
+			assert.Equal(t, fillZerologTestFields(t, "{\"level\":\"info\",\"foo\":\"bar\",\"foo2\":\"bar2\",\"time\":\"%s\",\"source\":\"%s\"}\n"), out.String())
+
+			// Ensure original loggers were not modified.
+			out.Reset()
+			log.Info().Msg("")
+			assert.Equal(t, fillZerologTestFields(t, "{\"level\":\"info\",\"time\":\"%s\",\"source\":\"%s\"}\n"), out.String())
+
+			out.Reset()
+			logger.Info().Msg("")
+			assert.Equal(t, fillZerologTestFields(t, "{\"level\":\"info\",\"foo\":\"bar\",\"time\":\"%s\",\"source\":\"%s\"}\n"), out.String())
+		})
+
+		t.Run("slog", func(t *testing.T) {
+			out := &bytes.Buffer{}
+			log := New(Slog, t.Name(), out)
+
+			logger := log.With().
+				Str("foo", "bar").
+				Logger()
+			logger.Info().Msg("")
+			assert.Equal(t, fillSlogTestFields(t, "level=INFO msg=\"\" source=%s foo=bar\n"), out.String())
+
+			// Log with per-message attribute.
+			out.Reset()
+			logger.Info().Int("n", 123).Msg("")
+			assert.Equal(t, fillSlogTestFields(t, "level=INFO msg=\"\" source=%s foo=bar n=123\n"), out.String())
+
+			// Retain attributes on sublogger.
+			out.Reset()
+			logger2 := logger.With().
+				Str("foo2", "bar2").
+				Logger()
+			logger2.Info().Msg("")
+			assert.Equal(t, fillSlogTestFields(t, "level=INFO msg=\"\" source=%s foo=bar foo2=bar2\n"), out.String())
+
+			// Ensure original loggers were not modified.
+			out.Reset()
+			log.Info().Msg("")
+			assert.Equal(t, fillSlogTestFields(t, "level=INFO msg=\"\" source=%s\n"), out.String())
+
+			out.Reset()
+			logger.Info().Msg("")
+			assert.Equal(t, fillSlogTestFields(t, "level=INFO msg=\"\" source=%s foo=bar\n"), out.String())
 		})
 	})
 }

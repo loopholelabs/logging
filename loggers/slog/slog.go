@@ -83,6 +83,10 @@ func (s *Logger) SubLogger(source string) types.SubLogger {
 	return newSlog(fmt.Sprintf("%s:%s", s.source, source), sloglevel, s.output)
 }
 
+func (s *Logger) With() types.Context {
+	return &Context{l: s}
+}
+
 func (s *Logger) Fatal() types.Event {
 	return &Event{
 		level:  slog.LevelError + 1,

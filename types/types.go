@@ -29,6 +29,7 @@ type Logger interface {
 type SubLogger interface {
 	Level() Level
 	SubLogger(source string) SubLogger
+	With() Context
 
 	Fatal() Event
 	Error() Event
@@ -39,29 +40,40 @@ type SubLogger interface {
 }
 
 type Event interface {
-	Str(key string, val string) Event
-	Bool(key string, val bool) Event
-
-	Int(key string, val int) Event
-	Int8(key string, val int8) Event
-	Int16(key string, val int16) Event
-	Int32(key string, val int32) Event
-	Int64(key string, val int64) Event
-
-	Uint(key string, val uint) Event
-	Uint8(key string, val uint8) Event
-	Uint16(key string, val uint16) Event
-	Uint32(key string, val uint32) Event
-	Uint64(key string, val uint64) Event
-
-	Float32(key string, val float32) Event
-	Float64(key string, val float64) Event
-
-	IPAddr(key string, ipAddr net.IP) Event
-	MACAddr(key string, macAddr net.HardwareAddr) Event
-
-	Err(err error) Event
+	taggable[Event]
 
 	Msg(msg string)
 	Msgf(format string, args ...interface{})
+}
+
+type Context interface {
+	taggable[Context]
+
+	Logger() SubLogger
+}
+
+// taggable represents values that can receive structured fields.
+type taggable[T any] interface {
+	Str(key string, val string) T
+	Bool(key string, val bool) T
+
+	Int(key string, val int) T
+	Int8(key string, val int8) T
+	Int16(key string, val int16) T
+	Int32(key string, val int32) T
+	Int64(key string, val int64) T
+
+	Uint(key string, val uint) T
+	Uint8(key string, val uint8) T
+	Uint16(key string, val uint16) T
+	Uint32(key string, val uint32) T
+	Uint64(key string, val uint64) T
+
+	Float32(key string, val float32) T
+	Float64(key string, val float64) T
+
+	IPAddr(key string, ipAddr net.IP) T
+	MACAddr(key string, macAddr net.HardwareAddr) T
+
+	Err(err error) T
 }

@@ -65,6 +65,13 @@ func (z *Logger) SubLogger(source string) types.SubLogger {
 	}
 }
 
+func (z *Logger) With() types.Context {
+	return &Context{
+		l:       z,
+		zeroCtx: z.logger.With(),
+	}
+}
+
 func (z *Logger) Fatal() types.Event {
 	return (*Event)(z.logger.Fatal().Timestamp().Str(types.SourceKey, z.source))
 }

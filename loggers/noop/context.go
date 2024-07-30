@@ -81,3 +81,7 @@ func (c *Context) IPAddr(key string, ipAddr net.IP) types.Context {
 func (c *Context) MACAddr(key string, macAddr net.HardwareAddr) types.Context {
 	return c
 }
+
+func (c *Context) Err(err error) types.Context {
+	return c
+}

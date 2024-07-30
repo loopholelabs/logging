@@ -103,3 +103,8 @@ func (c *Context) MACAddr(key string, val net.HardwareAddr) types.Context {
 	c.zeroCtx = c.zeroCtx.MACAddr(key, val)
 	return c
 }
+
+func (c *Context) Err(err error) types.Context {
+	c.zeroCtx = c.zeroCtx.Err(err)
+	return c
+}

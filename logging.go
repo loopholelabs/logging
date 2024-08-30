@@ -25,7 +25,7 @@ const (
 
 // New creates a new logger based on the given kind, source, and output
 // and a default level of Info.
-func New(kind Kind, source string, output io.Writer) types.Logger {
+func New(kind Kind, source string, output io.Writer) types.RootLogger {
 	switch kind {
 	case Noop:
 		return noop.New(types.InfoLevel)
@@ -38,7 +38,7 @@ func New(kind Kind, source string, output io.Writer) types.Logger {
 	}
 }
 
-func Test(t testing.TB, kind Kind, source string) types.Logger {
+func Test(t testing.TB, kind Kind, source string) types.RootLogger {
 	switch kind {
 	case Noop:
 		return noop.New(types.InfoLevel)

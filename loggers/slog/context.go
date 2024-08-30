@@ -16,9 +16,12 @@ type Context struct {
 	attrs []any
 }
 
-func (c *Context) Logger() types.SubLogger {
+func (c *Context) Logger() types.Logger {
 	l := New(c.l.source, c.l.level, c.l.output)
-	l.logger = c.l.logger.With(c.attrs...)
+	if c.attrs != nil {
+		l.logger = l.logger.With(c.attrs...)
+		l.attrs = c.attrs
+	}
 	return l
 }
 

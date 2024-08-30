@@ -4,7 +4,7 @@ package noop
 
 import "github.com/loopholelabs/logging/types"
 
-var _ types.Logger = (*Logger)(nil)
+var _ types.RootLogger = (*Logger)(nil)
 
 type Logger struct {
 	level types.Level
@@ -22,7 +22,7 @@ func (s *Logger) Level() types.Level {
 	return s.level
 }
 
-func (s *Logger) SubLogger(string) types.SubLogger { return s }
+func (s *Logger) SubLogger(string) types.Logger { return s }
 
 func (s *Logger) With() types.Context {
 	return &Context{l: s}

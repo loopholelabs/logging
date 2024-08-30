@@ -10,7 +10,7 @@ import (
 	"github.com/loopholelabs/logging/types"
 )
 
-var _ types.Logger = (*Logger)(nil)
+var _ types.RootLogger = (*Logger)(nil)
 
 var (
 	ReplaceAttr = func(_ []string, a slog.Attr) slog.Attr {
@@ -77,7 +77,7 @@ func (s *Logger) SetLevel(level types.Level) {
 	s.slogLevel.Set(slogLevel)
 }
 
-func (s *Logger) SubLogger(source string) types.SubLogger {
+func (s *Logger) SubLogger(source string) types.Logger {
 	sloglevel := new(slog.LevelVar)
 	sloglevel.Set(s.slogLevel.Level())
 	l := newSlog(fmt.Sprintf("%s:%s", s.source, source), sloglevel, s.output)

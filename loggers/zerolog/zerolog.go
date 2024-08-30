@@ -11,7 +11,7 @@ import (
 	"github.com/loopholelabs/logging/types"
 )
 
-var _ types.Logger = (*Logger)(nil)
+var _ types.RootLogger = (*Logger)(nil)
 
 type Logger struct {
 	level  types.Level
@@ -58,7 +58,7 @@ func (z *Logger) SetLevel(level types.Level) {
 	z.logger.Level(zerologLevel)
 }
 
-func (z *Logger) SubLogger(source string) types.SubLogger {
+func (z *Logger) SubLogger(source string) types.Logger {
 	return &Logger{
 		logger: z.logger,
 		source: fmt.Sprintf("%s:%s", z.source, source),

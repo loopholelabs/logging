@@ -14,7 +14,7 @@ type Context struct {
 	l *Logger
 }
 
-func (c *Context) Logger() types.SubLogger {
+func (c *Context) Logger() types.Logger {
 	return c.l
 }
 

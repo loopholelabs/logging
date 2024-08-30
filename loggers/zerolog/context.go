@@ -16,7 +16,7 @@ type Context struct {
 	zeroCtx zerolog.Context
 }
 
-func (c *Context) Logger() types.SubLogger {
+func (c *Context) Logger() types.Logger {
 	return &Logger{
 		logger: c.zeroCtx.Logger(),
 		source: c.l.source,

@@ -21,14 +21,14 @@ const (
 	SourceKey    = "source"
 )
 
-type Logger interface {
+type RootLogger interface {
 	SetLevel(level Level)
-	SubLogger
+	Logger
 }
 
-type SubLogger interface {
+type Logger interface {
 	Level() Level
-	SubLogger(source string) SubLogger
+	SubLogger(source string) Logger
 	With() Context
 
 	Fatal() Event
@@ -49,7 +49,7 @@ type Event interface {
 type Context interface {
 	taggable[Context]
 
-	Logger() SubLogger
+	Logger() Logger
 }
 
 // taggable represents values that can receive structured fields.

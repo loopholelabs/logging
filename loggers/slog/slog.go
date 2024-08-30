@@ -28,6 +28,7 @@ type Logger struct {
 	slogLevel *slog.LevelVar
 	output    io.Writer
 	source    string
+	attrs     []any
 }
 
 func New(source string, level types.Level, output io.Writer) *Logger {
@@ -44,13 +45,12 @@ func newSlog(source string, slogLevel *slog.LevelVar, output io.Writer) *Logger 
 	}).WithAttrs([]slog.Attr{
 		{Key: types.SourceKey, Value: slog.StringValue(source)},
 	}))
-	s := &Logger{
+	return &Logger{
 		logger:    sl,
 		output:    output,
 		slogLevel: slogLevel,
 		source:    source,
 	}
-	return s
 }
 
 func (s *Logger) Level() types.Level {
@@ -80,11 +80,17 @@ func (s *Logger) SetLevel(level types.Level) {
 func (s *Logger) SubLogger(source string) types.SubLogger {
 	sloglevel := new(slog.LevelVar)
 	sloglevel.Set(s.slogLevel.Level())
-	return newSlog(fmt.Sprintf("%s:%s", s.source, source), sloglevel, s.output)
+	l := newSlog(fmt.Sprintf("%s:%s", s.source, source), sloglevel, s.output)
+	l.level = s.level
+	if s.attrs != nil {
+		l.logger = l.logger.With(s.attrs...)
+		l.attrs = s.attrs
+	}
+	return l
 }
 
 func (s *Logger) With() types.Context {
-	return &Context{l: s}
+	return &Context{l: s, attrs: s.attrs}
 }
 
 func (s *Logger) Fatal() types.Event {

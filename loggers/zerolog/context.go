@@ -17,11 +17,7 @@ type Context struct {
 }
 
 func (c *Context) Logger() types.Logger {
-	return &Logger{
-		logger: c.zeroCtx.Logger(),
-		source: c.l.source,
-		level:  c.l.level,
-	}
+	return newLogger(c.l.source, c.l.level, c.zeroCtx.Logger())
 }
 
 func (c *Context) Str(key string, val string) types.Context {

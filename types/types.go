@@ -2,7 +2,15 @@
 
 package types
 
-import "net"
+import (
+	"errors"
+	"net"
+	"strings"
+)
+
+var (
+	ErrInvalidLogLevel = errors.New("invalid log level")
+)
 
 type Level int
 
@@ -14,6 +22,50 @@ const (
 	DebugLevel
 	TraceLevel
 )
+
+func (l Level) String() string {
+	switch l {
+	case FatalLevel:
+		return "FATAL"
+	case ErrorLevel:
+		return "ERROR"
+	case WarnLevel:
+		return "WARN"
+	case InfoLevel:
+		return "INFO"
+	case DebugLevel:
+		return "DEBUG"
+	case TraceLevel:
+		return "TRACE"
+	default:
+		return "invalid"
+	}
+}
+
+func (l Level) Type() string {
+	return "log level"
+}
+
+func (l *Level) Set(v string) error {
+	switch strings.ToLower(v) {
+	case "fatal":
+		*l = FatalLevel
+	case "error":
+		*l = ErrorLevel
+	case "warn":
+		*l = WarnLevel
+	case "info":
+		*l = InfoLevel
+	case "debug":
+		*l = DebugLevel
+	case "trace":
+		*l = TraceLevel
+	default:
+		return ErrInvalidLogLevel
+	}
+
+	return nil
+}
 
 const (
 	TimestampKey = "time"

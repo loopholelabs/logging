@@ -8,6 +8,10 @@ import (
 	"strings"
 )
 
+var (
+	ErrInvalidLogLevel = errors.New("invalid log level")
+)
+
 type Level int
 
 const (
@@ -57,7 +61,7 @@ func (l *Level) Set(v string) error {
 	case "trace":
 		*l = TraceLevel
 	default:
-		return errors.New("invalid log level")
+		return ErrInvalidLogLevel
 	}
 
 	return nil

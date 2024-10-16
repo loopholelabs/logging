@@ -5,6 +5,7 @@ package zerolog
 import (
 	"fmt"
 	"io"
+	"sync"
 
 	"github.com/rs/zerolog"
 
@@ -14,9 +15,10 @@ import (
 var _ types.RootLogger = (*Logger)(nil)
 
 type Logger struct {
-	level  types.Level
-	logger zerolog.Logger
-	source string
+	level      types.Level
+	logger     *zerolog.Logger
+	loggerLock sync.RWMutex
+	source     string
 }
 
 func init() {
@@ -25,9 +27,12 @@ func init() {
 }
 
 func New(source string, level types.Level, output io.Writer) *Logger {
-	zl := zerolog.New(output)
+	return newLogger(source, level, zerolog.New(output))
+}
+
+func newLogger(source string, level types.Level, zl zerolog.Logger) *Logger {
 	z := &Logger{
-		logger: zl,
+		logger: &zl,
 		source: source,
 	}
 	z.SetLevel(level)
@@ -54,18 +59,24 @@ func (z *Logger) SetLevel(level types.Level) {
 	case types.TraceLevel:
 		zerologLevel = zerolog.TraceLevel
 	}
+
+	newLogger := z.logger.Level(zerologLevel)
+
+	z.loggerLock.Lock()
+	defer z.loggerLock.Unlock()
+
+	z.logger = &newLogger
 	z.level = level
-	z.logger.Level(zerologLevel)
 }
 
 func (z *Logger) SubLogger(source string) types.Logger {
-	return &Logger{
-		logger: z.logger,
-		source: fmt.Sprintf("%s:%s", z.source, source),
-	}
+	return newLogger(fmt.Sprintf("%s:%s", z.source, source), z.level, *z.logger)
 }
 
 func (z *Logger) With() types.Context {
+	z.loggerLock.RLock()
+	defer z.loggerLock.RUnlock()
+
 	return &Context{
 		l:       z,
 		zeroCtx: z.logger.With(),
@@ -73,25 +84,43 @@ func (z *Logger) With() types.Context {
 }
 
 func (z *Logger) Fatal() types.Event {
+	z.loggerLock.RLock()
+	defer z.loggerLock.RUnlock()
+
 	return (*Event)(z.logger.Fatal().Timestamp().Str(types.SourceKey, z.source))
 }
 
 func (z *Logger) Error() types.Event {
+	z.loggerLock.RLock()
+	defer z.loggerLock.RUnlock()
+
 	return (*Event)(z.logger.Error().Timestamp().Str(types.SourceKey, z.source))
 }
 
 func (z *Logger) Warn() types.Event {
+	z.loggerLock.RLock()
+	defer z.loggerLock.RUnlock()
+
 	return (*Event)(z.logger.Warn().Timestamp().Str(types.SourceKey, z.source))
 }
 
 func (z *Logger) Info() types.Event {
+	z.loggerLock.RLock()
+	defer z.loggerLock.RUnlock()
+
 	return (*Event)(z.logger.Info().Timestamp().Str(types.SourceKey, z.source))
 }
 
 func (z *Logger) Debug() types.Event {
+	z.loggerLock.RLock()
+	defer z.loggerLock.RUnlock()
+
 	return (*Event)(z.logger.Debug().Timestamp().Str(types.SourceKey, z.source))
 }
 
 func (z *Logger) Trace() types.Event {
+	z.loggerLock.RLock()
+	defer z.loggerLock.RUnlock()
+
 	return (*Event)(z.logger.Trace().Timestamp().Str(types.SourceKey, z.source))
 }

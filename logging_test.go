@@ -66,6 +66,7 @@ func TestInfo(t *testing.T) {
 			out := &bytes.Buffer{}
 			log := New(Noop, t.Name(), out)
 			log.Info().Msg("")
+			log.Debug().Msg("") // Should not be logged.
 			assert.Equal(t, "", out.String())
 		})
 
@@ -73,6 +74,7 @@ func TestInfo(t *testing.T) {
 			out := &bytes.Buffer{}
 			log := New(Zerolog, t.Name(), out)
 			log.Info().Msg("")
+			log.Debug().Msg("") // Should not be logged.
 			assert.Equal(t, fillZerologTestFields(t, "{\"level\":\"info\",\"time\":\"%s\",\"source\":\"%s\"}\n"), out.String())
 		})
 
@@ -80,6 +82,7 @@ func TestInfo(t *testing.T) {
 			out := &bytes.Buffer{}
 			log := New(Slog, t.Name(), out)
 			log.Info().Msg("")
+			log.Debug().Msg("") // Should not be logged.
 			assert.Equal(t, fillSlogTestFields(t, "level=INFO msg=\"\" source=%s\n"), out.String())
 		})
 	})
@@ -89,6 +92,7 @@ func TestInfo(t *testing.T) {
 			out := &bytes.Buffer{}
 			log := New(Noop, t.Name(), out)
 			log.Info().Str("foo", "bar").Msg("")
+			log.Debug().Str("foo", "bar").Msg("") // Should not be logged.
 			assert.Equal(t, "", out.String())
 		})
 
@@ -96,6 +100,7 @@ func TestInfo(t *testing.T) {
 			out := &bytes.Buffer{}
 			log := New(Zerolog, t.Name(), out)
 			log.Info().Str("foo", "bar").Msg("")
+			log.Debug().Str("foo", "bar").Msg("") // Should not be logged.
 			assert.Equal(t, fillZerologTestFields(t, "{\"level\":\"info\",\"time\":\"%s\",\"source\":\"%s\",\"foo\":\"bar\"}\n"), out.String())
 		})
 
@@ -103,6 +108,7 @@ func TestInfo(t *testing.T) {
 			out := &bytes.Buffer{}
 			log := New(Slog, t.Name(), out)
 			log.Info().Str("foo", "bar").Msg("")
+			log.Debug().Str("foo", "bar").Msg("") // Should not be logged.
 			assert.Equal(t, fillSlogTestFields(t, "level=INFO msg=\"\" source=%s foo=bar\n"), out.String())
 		})
 	})
@@ -115,6 +121,10 @@ func TestInfo(t *testing.T) {
 				Str("foo", "bar").
 				Int("n", 123).
 				Msg("")
+			log.Debug(). // Should not be logged.
+					Str("foo", "bar").
+					Int("n", 123).
+					Msg("")
 			assert.Equal(t, "", out.String())
 		})
 
@@ -125,6 +135,10 @@ func TestInfo(t *testing.T) {
 				Str("foo", "bar").
 				Int("n", 123).
 				Msg("")
+			log.Debug(). // Should not be logged.
+					Str("foo", "bar").
+					Int("n", 123).
+					Msg("")
 			assert.Equal(t, fillZerologTestFields(t, "{\"level\":\"info\",\"time\":\"%s\",\"source\":\"%s\",\"foo\":\"bar\",\"n\":123}\n"), out.String())
 		})
 
@@ -135,6 +149,10 @@ func TestInfo(t *testing.T) {
 				Str("foo", "bar").
 				Int("n", 123).
 				Msg("")
+			log.Debug(). // Should not be logged.
+					Str("foo", "bar").
+					Int("n", 123).
+					Msg("")
 			assert.Equal(t, fillSlogTestFields(t, "level=INFO msg=\"\" source=%s foo=bar n=123\n"), out.String())
 		})
 	})

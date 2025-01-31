@@ -87,6 +87,29 @@ func TestInfo(t *testing.T) {
 		})
 	})
 
+	t.Run("nil", func(t *testing.T) {
+		t.Run("noop", func(t *testing.T) {
+			out := &bytes.Buffer{}
+			log := New(Noop, t.Name(), out)
+			log.Error().Err(nil).Msg("test")
+			assert.Equal(t, "", out.String())
+		})
+
+		t.Run("zerolog", func(t *testing.T) {
+			out := &bytes.Buffer{}
+			log := New(Zerolog, t.Name(), out)
+			log.Error().Err(nil).Msg("test")
+			assert.Equal(t, fillZerologTestFields(t, "{\"level\":\"error\",\"time\":\"%s\",\"source\":\"%s\",\"message\":\"test\"}\n"), out.String())
+		})
+
+		t.Run("slog", func(t *testing.T) {
+			out := &bytes.Buffer{}
+			log := New(Slog, t.Name(), out)
+			log.Error().Err(nil).Msg("test")
+			assert.Equal(t, fillSlogTestFields(t, "level=ERROR msg=test source=%s\n"), out.String())
+		})
+	})
+
 	t.Run("one-field", func(t *testing.T) {
 		t.Run("noop", func(t *testing.T) {
 			out := &bytes.Buffer{}

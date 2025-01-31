@@ -153,6 +153,9 @@ func (e *Event) MACAddr(key string, macAddr net.HardwareAddr) types.Event {
 }
 
 func (e *Event) Err(err error) types.Event {
+	if err == nil {
+		return e
+	}
 	e.attr = append(e.attr, slog.Attr{
 		Key:   types.ErrorKey,
 		Value: slog.StringValue(err.Error()),

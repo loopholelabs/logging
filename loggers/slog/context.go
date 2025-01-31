@@ -154,6 +154,9 @@ func (c *Context) MACAddr(key string, macAddr net.HardwareAddr) types.Context {
 }
 
 func (c *Context) Err(err error) types.Context {
+	if err == nil {
+		return c
+	}
 	c.attrs = append(c.attrs, slog.Attr{
 		Key:   "error",
 		Value: slog.StringValue(err.Error()),
